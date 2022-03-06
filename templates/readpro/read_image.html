@@ -1,0 +1,50 @@
+<script>
+    $(document).ready(function(){ 
+        function submitFile(){
+            var fd = new FormData();
+            fd.append('file', getFile())
+            $.ajax({
+                url: "{% url 'process_image' %}",
+                type: "POST",
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function(data){
+                    // console.log(data.content);
+                    if(data.content){
+                        $('#content').html(
+                            "<p>" + data.content + "</p>"
+                        )
+                    }  
+                }
+            })
+        }
+
+        function getFile(){
+            var fp = $("#file_id")
+            var item = fp[0].files
+            return item[0]
+        }
+
+        // Submit the file for OCRization
+        $("#ocrForm").on('submit', function(event){
+            event.preventDefault();
+            submitFile()
+        })
+    });
+</script>
+
+<body>
+    <div style="text-align: center;">
+    <form enctype="multipart/form-data" id="ocrForm" action="{% url 'process_image' %}" method="post"> <!-- Do not forget to add: enctype="multipart/form-data" -->
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-success">OCRzed</button>
+    </form>
+
+    <br><br><hr>
+    <div id="content" style="width: 50%; margin: 0 auto;">
+        
+    </div>
+</div>
+</body>
