@@ -38,7 +38,6 @@ def create_delete_query(table_name, where_fields):
     return query
 
 def create_get_query(table_name, where_fields, data=False):
-    logger.info("Data given to this  %s" % data)
     where_clause = []
     for key,value in where_fields.items():
         clause_str = " %s = '%s'" % (key,value)
@@ -48,10 +47,10 @@ def create_get_query(table_name, where_fields, data=False):
     else:
         where_clause = ''
     limit_clause = ''
-    if 'limit' in data:
+    if data and 'limit' in data:
         data['limit'] = int(data['limit'])
         limit_clause = 'LIMIT %s' % data['limit']
-    if 'page_no' in data:
+    if data and 'page_no' in data:
         data['page_no'] = int(data['page_no'])
         limit_clause+= ', %s' % (data['page_no']*data['limit'])
     query = "SELECT * FROM %s %s %s" % (table_name, where_clause, limit_clause)

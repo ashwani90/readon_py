@@ -7,22 +7,24 @@ cursor = connection.cursor()
 from readpro.helpers.query_helper import create_insert_query, create_update_query, create_delete_query, create_get_query
 import logging
 logger = logging.getLogger(__name__)
+from readpro.app.util.time_helper import get_datetime_string
 
 # Create your models here.
 
 class Word(models.Model):
     table_name = 'word'
-    
+
     def save_word(self,word_details):
+        word_details['created_at'] = get_datetime_string()
         query = create_insert_query(self.table_name, word_details)
-        print(query)
+
         try:
             cursor.execute(query)
             return True
         except Exception as e:
             logger.exception("Error Creating the data %s" % e)
             return None
-        
+
     def update_word(self,word_details,where_fields):
         query = create_update_query(self.table_name, word_details, where_fields)
         try:
@@ -37,7 +39,7 @@ class Word(models.Model):
         except Exception as e:
             logger.exception("Error Creating the data %s" % e)
             return None
-        
+
     def delete_word(self,where_fields):
         query = create_delete_query(self.table_name, where_fields)
         try:
@@ -46,7 +48,7 @@ class Word(models.Model):
         except Exception as e:
             logger.exception("Error Creating the data %s" % e)
             return None
-        
+
     def get_word_data(self,where_fields):
         query = create_get_query(self.table_name, where_fields)
         try:
@@ -59,7 +61,7 @@ class Word(models.Model):
         except Exception as e:
             logger.exception("Error fetching the data %s" % e)
             return None
-    
+
     def get_word(self,id=None):
         query = "SELECT * from word"
         where_clause = ""
