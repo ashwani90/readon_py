@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 class Category(Base):
     all_fields = ["name","description"]
     optional_fields = ["parent_ids","child_ids","created_at", "id"]
+
     def create(self, data):
         fields = Base.create_fields(self,data)
         if not fields:
@@ -29,7 +30,7 @@ class Category(Base):
         if not fields:
             return None
         model = Model()
-        data = task.delete(fields)
+        data = model.delete(fields)
         return data
 
     def get_data(self,data):
